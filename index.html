@@ -1,1 +1,292 @@
-"Hello World" 
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>QR code reader</title>
+    <link rel="icon" href="icon48.png" type="image/x-icon">
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+
+        /* 统一拖拽区域样式 */
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            cursor: pointer;
+        }
+
+        .drop-zone.dragover {
+            background-color: #f0f0f0;
+            border-color: #999;
+        }
+
+        /* 生成区域样式 */
+        .generator {
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        #preview {
+            max-width: 300px;
+            margin: 20px auto;
+            display: none;
+        }
+
+        #result, #qrcodeOutput {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+        }
+
+        .input-group {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .qrcode-image {
+            margin: 20px auto;
+            display: block;
+        }
+
+        .url-input-group {
+            margin: 15px 0;
+            display: flex;
+            gap: 10px;
+        }
+        .url-input-group input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .loading {
+            display: none;
+            color: #666;
+            font-style: italic;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 解析部分 -->
+        <div>
+            <div class="drop-zone" id="dropZone">
+                <p>拖拽二维码图片到这里</p>
+                <button id="pasteBtn">从剪贴板读取图片</button>
+            </div>
+            
+            <!-- 新增URL输入区域 -->
+            <div class="url-input-group">
+                <input type="url" id="imageUrl" placeholder="输入图片URL地址" pattern="https?://.+">
+                <button onclick="loadImageFromUrl()">解析URL图片</button>
+            </div>
+            <div class="loading" id="loading">正在加载图片...</div>
+            
+            <img id="preview" alt="预览">
+            <div id="result"></div>
+        </div>
+
+        <!-- 生成部分 -->
+        <div class="generator">
+            <h3>生成二维码</h3>
+            <div class="input-group">
+                <input type="text" id="inputText" placeholder="输入要生成的内容">
+                <button onclick="generateQR()">生成</button>
+            </div>
+            <div id="qrcodeOutput"></div>
+        </div>
+    </div>
+
+    <!-- 依赖库 -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+
+    <script>
+        // 新增URL解析功能
+        const imageUrlInput = document.getElementById('imageUrl');
+        const loading = document.getElementById('loading');
+
+        async function loadImageFromUrl() {
+            const url = imageUrlInput.value.trim();
+            if (!url) return;
+
+            // 简单验证URL格式
+            if (!/^https?:\/\//i.test(url)) {
+                showResult('请输入有效的HTTP地址', true);
+                return;
+            }
+
+            try {
+                loading.style.display = 'block';
+                const response = await fetch(url);
+                
+                if (!response.ok) throw new Error(`HTTP错误: ${response.status}`);
+                if (!response.headers.get('content-type').startsWith('image/')) {
+                    throw new Error('URL指向的不是图片文件');
+                }
+
+                const blob = await response.blob();
+                await handleImageBlob(blob);
+            } catch (err) {
+                showResult(`加载失败: ${err.message}`, true);
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        // 为URL输入框添加回车支持
+        imageUrlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                loadImageFromUrl();
+                e.preventDefault();
+            }
+        });
+
+        // 解析功能
+        const dropZone = document.getElementById('dropZone');
+        const pasteBtn = document.getElementById('pasteBtn');
+        const preview = document.getElementById('preview');
+        const resultDiv = document.getElementById('result');
+
+        // 拖拽处理
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file) handleImageFile(file);
+        });
+
+        // 剪贴板处理
+        pasteBtn.addEventListener('click', async () => {
+            try {
+                const clipboardItems = await navigator.clipboard.read();
+                for (const item of clipboardItems) {
+                    for (const type of item.types) {
+                        if (type.startsWith('image/')) {
+                            const blob = await item.getType(type);
+                            handleImageBlob(blob);
+                            return;
+                        }
+                    }
+                }
+                showResult('未在剪贴板中找到图片', true);
+            } catch (err) {
+                showResult('无法读取剪贴板: ' + err.toString(), true);
+            }
+        });
+
+        // 图片处理通用方法
+        async function handleImageFile(file) {
+            const img = await createImage(URL.createObjectURL(file));
+            processImage(img);
+        }
+
+        async function handleImageBlob(blob) {
+            const img = await createImage(URL.createObjectURL(blob));
+            processImage(img);
+        }
+
+        function createImage(src) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = src;
+            });
+        }
+
+        function processImage(img) {
+            preview.style.display = 'block';
+            preview.src = img.src;
+
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height);
+            
+            code ? showResult(code.data) : showResult('未检测到二维码', true);
+        }
+
+        // 生成功能        
+        let qrcode = null;
+        function generateQR() {
+            const text = document.getElementById('inputText').value.trim();
+            const container = document.getElementById('qrcodeOutput');
+            
+            container.innerHTML = '';
+            if (text) {
+                qrcode = new QRCode(container, {
+                    text: text,
+                    width: 200,
+                    height: 200,
+                    colorDark : "#000000",
+                    colorLight : "#ffffff",
+                    correctLevel : QRCode.CorrectLevel.H
+                });
+                container.querySelector('img').classList.add('qrcode-image');
+            }
+        }
+
+        // 新增回车键支持
+        document.getElementById('inputText').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                generateQR();
+                e.preventDefault(); // 防止表单提交（如果有的话）
+            }
+        });
+
+        // 结果展示
+        function showResult(text, isError = false) {
+            resultDiv.style.color = isError ? 'red' : 'green';
+            resultDiv.innerHTML = /^https?:\/\//.test(text) 
+                ? `解析结果: <a href="${text}" target="_blank">${text}</a>`
+                : '解析结果: ' + text;
+        }
+    </script>
+</body>
+</html>
