@@ -1,0 +1,700 @@
+\documentclass[12pt,a4paper]{article}% 文档格式
+\usepackage[UTF8]{ctex}% 输出汉字
+%\usepackage{times}% 英文使用Times New Roman
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\date{}% 日期（这里避免生成日期）
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath,amsfonts,amssymb}% 为公式输入创造条件的宏包
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{graphicx}% 图片插入宏包
+\usepackage{subfigure}% 并排子图
+\usepackage{float}% 浮动环境，用于调整图片位置
+\usepackage[export]{adjustbox}% 防止过宽的图片
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{abstract}% 两栏文档，一栏摘要及关键字宏包
+\renewcommand{\abstracttextfont}{\fangsong}% 摘要内容字体为仿宋
+\renewcommand{\abstractname}{\textbf{摘\quad 要}}% 更改摘要二字的样式
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{xcolor}% 字体颜色宏包
+\newcommand{\red}[1]{\textcolor[rgb]{1.00,0.00,0.00}{#1}}
+\newcommand{\blue}[1]{\textcolor[rgb]{0.00,0.00,1.00}{#1}}
+\newcommand{\green}[1]{\textcolor[rgb]{0.00,1.00,0.00}{#1}}
+\newcommand{\darkblue}[1]
+{\textcolor[rgb]{0.00,0.00,0.50}{#1}}
+\newcommand{\darkgreen}[1]
+{\textcolor[rgb]{0.00,0.37,0.00}{#1}}
+\newcommand{\darkred}[1]{\textcolor[rgb]{0.60,0.00,0.00}{#1}}
+\newcommand{\brown}[1]{\textcolor[rgb]{0.50,0.30,0.00}{#1}}
+\newcommand{\purple}[1]{\textcolor[rgb]{0.50,0.00,0.50}{#1}}% 为使用方便而编辑的新指令
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amssymb}
+\usepackage{ntheorem}
+ 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{url}% 超链接
+\usepackage{bm}% 加粗部分公式
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{epstopdf}
+\usepackage{epsfig}
+\usepackage{longtable}% 长表格
+\usepackage{supertabular}% 跨页表格
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{changepage}% 换页
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{enumerate}% 短编号
+\usepackage{caption}% 设置标题
+\captionsetup[figure]{name=\fontsize{10pt}{15pt}\selectfont 图}% 设置图片编号头
+\captionsetup[table]{name=\fontsize{10pt}{15pt}\selectfont Table}% 设置表格编号头
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{indentfirst}% 中文首行缩进
+\usepackage[left=2.50cm,right=2.50cm,top=2.80cm,bottom=2.50cm]{geometry}% 页边距设置
+\renewcommand{\baselinestretch}{1.5}% 定义行间距（1.5）
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fancyhdr} %设置全文页眉、页脚的格式
+\pagestyle{fancy}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[backend=biber,style=numeric]{biblatex}
+\addbibresource{reference.bib}
+\usepackage{hyperref}
+\hypersetup{colorlinks=true,linkcolor=black}% 去除引用红框，改变颜色
+
+
+\begin{document}
+
+	
+	\lhead{}% 页眉左边设为空
+	\chead{}% 页眉中间设为空
+	\rhead{}% 页眉右边设为空
+	\lfoot{}% 页脚左边设为空
+	\cfoot{\thepage}% 页脚中间显示页码
+	\rfoot{}% 页脚右边设为空
+
+\newtheorem{Theorem}{定理}[section]
+\newtheorem{thm}[Theorem]{定理}
+\newtheorem{lemma}[Theorem]{引理}
+\newtheorem*{pf}{证明：}
+\newtheorem{ReedsConjecture}[Theorem]{\textbf{Reed 猜想}}
+\newtheorem{Conjecture}[Theorem]{猜想}
+
+\def\qed{\hfill \rule{4pt}{7pt}}
+
+
+\begin{abstract}
+    \fangsong Reed 猜想任意图 $G$ 都满足 $\chi(G) \leq \left\lceil \dfrac{\omega (G) + \Delta (G) + 1}{2}  \right\rceil$. 本文证明了如果图 $G,H$ 满足Reed猜想, 那么 $G \otimes H, G \times H$ 都满足Reed猜想; 若$G,H$ 满足较弱的Reed猜想, 那么$G \boxtimes H$ 也满足较弱的Reed猜想; 五长洞, 奇洞等的团爆破满足Reed猜想, 进而推出无帽无偶圈图满足Reed猜想.
+\end{abstract}
+	
+\begin{adjustwidth}{1.06cm}{1.06cm}
+	\fontsize{10.5pt}{15.75pt}\selectfont{\heiti{关键词：}\fangsong{Reed's Conjecture, Cartesian Product}}\\
+\end{adjustwidth}
+	
+\begin{center}% 居中处理
+		{\textbf{Abstract}}% 英文摘要
+\end{center}
+\begin{adjustwidth}{1.06cm}{1.06cm}% 英文摘要内容
+	\hspace{1.5em}Reed's Conjecture states that for any graph $G$, $\chi(G) \leq \left\lceil \dfrac{\omega (G) + \Delta (G) + 1}{2} \right\rceil$. This paper proves that if graphs $G, H$ satisfy Reed's Conjecture, then their tensor product $G \otimes H$ and Cartesian product $G \times H$ also satisfy Reed's Conjecture. For certain specific graphs $G, H$, their strong product $G \boxtimes H$ satisfies Reed's Conjecture. The clique blowing of 5-holes, odd holes, etc., satisfy Reed's Conjecture, which further implies that cap-free and even-hole-free graphs satisfy Reed's Conjecture.
+\end{adjustwidth}
+\newpage% 从新的一页继续
+
+\section{引言}
+
+\subsection{问题背景}
+图论起源于著名的柯尼斯堡七桥问题,即从一个地点出发, 是否存在出一个路线, 恰好把每座桥都走一次, 这样的路线称为 Euler 行走(Euler walk). 1736年, 在公认的图论的第一篇论文中, Euler\cite{euler1741} 将独立的陆地抽象为顶点, 连接两块陆地的桥抽象为两个顶点间的边(图\ref{EulerGraph}), 一个顶点所连边的数量称为它的度数. 通过分析这种路线上每一顶点的入度(从别的顶点过一条边到该顶点的次数)和出度(从该顶点过一条边到别的顶点的次数), Euler 证明了 Euler 行走存在的必要条件, 即恰好存在零个或者两个度数为奇数的顶点, 从而柯尼斯堡七桥问题不存在解.
+
+\begin{figure}[!b]
+    \begin{minipage}[b]{0.35\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{Euler.pdf}
+        \caption{七桥问题对应的图}
+        \label{EulerGraph}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[b]{0.35\textwidth} 
+        \centering
+        \includegraphics[width=\textwidth]{coloring_of_plane.pdf}
+        \caption{一个平面图的染色}
+        \label{PlaneColoring}
+    \end{minipage}
+\end{figure}
+
+
+图的染色起源于四色问题, 也就是对于一张没有飞地的地图, 是否可以只使用四种颜色将其染色, 使得所有具有公共边界的区域颜色不同. 它的图论表述如下, 对于平面图, 是否存在一种使用不超过四种颜色的染色方式将其顶点染色. 1879 年, Alfred Kempe 宣称证明了四色猜想, 并被人们所熟知, 然而到 1890 年, Percy Heawood 在 Kempe 的证明中发现了无法修正的错误. 此后一百多年间, 数学家沿着 Kempe 的思路寻找不可避免集的可约构形. 通过放电法和计算机辅助, Kenneth Appel 和 Wolfgang Haken 最终在 1976 年解决了四色问题, 现在称之为四色定理, 这也是第一个由电脑辅助证明的著名数学定理. 时至今日, 纯粹数学的证明还没有找到.
+
+
+
+在物理学, 化学, 计算科学等领域中, 又或者是搜索引擎, 地图服务等互联网系统设计中, 许多涉及关系和过程的问题都可以归化为图论问题. 电路设计, 交通规划, 资源调度等问题也可以概括为图的染色问题\cite{Ju2024}. 在数学领域, 图论与群论, 拓扑学等同样有着紧密联系.
+
+一般来说, 数学中时常关注那些已经被研究的对象通过一些运算产生的新对象. 图积是一种关于图的二元运算, 通过图积, 可以从已有的图创造出新的图.团膨胀也是一种关于图的运算, 通过对已知的图做团膨胀, 可以产生更大的图.
+
+\subsection{定义与符号}
+本文讨论的图均为不含自环和重边的有限, 简单, 无定向的图, 未提及的定义和术语参照\cite{bondy2008}.
+
+一个图 $G$ 是一个有序对 $(V(G),E(G))$ 和一个关联函数 $\psi_G$, 也可以简记为 $G = (V(G),E(G))$ 或 $G = (V,E)$. 其中 $V(G)$ 是一列顶点的集合, $E(G)$ 是一列边的集合, $\psi_G$ 将 $G$ 中的每一条边与 $G$ 中顶点的一个无序对相关联. 如果图 $G$ 的一条边 $e$ 和一对顶点 $u,v$ 满足 $\psi_G(e) = \{u,v\}$, 那么我们说 $u,v$ 相邻, 记作 $u \sim v$,并将 $u,v$ 称为 $e$ 的端点, 这时, 我们将 $uv$ 当作 $e$ 的另一种表示.$G$ 的顶点数 $|V(G)|$ 称为 $G$ 的阶, 为了方便, 本文采用 $|G|$ 表示 $|V(G)|$, 将 $u \in G$ 视作 $u \in V(G)$ 的简写.
+
+对于图 $G$ 上的一个顶点 $v$, 与 $v$ 相关联的边数称为 $v$ 的度数, 记作 $d(v)$. $G$ 中顶点度数的最大值 $\max\limits_{v \in G}\{d(v)\}$ 叫做 $G$ 的最大度, 记作 $\Delta(G)$; 相应的, $\min\limits_{v \in G}\{d(v)\}$ 叫做 $G$ 的最小度, 记作 $\delta(G)$. 
+
+在图 $G$ 中, 与顶点 $v$ 相邻的顶点的集合 $\{u|u \sim v, u \in G\}$ 称为 $v$ 的邻域, 记作 $N(v)$.
+
+一个图是正则的, 当它的每一顶点的度数都相同; 如果每一顶点的度数都是 $k$, 那么就称它是 $k-$ 正则的.
+
+对于图 $G = (V(G),E(H))$ , 图 $H = (V(H),E(H))$ 是 $G$ 的一个子图, 如果 $V(H) \subset V(G)$, 且 $E(H) \subset E(G)$. 特别地, 对于 $V(G)$ 的一个非空子集 $S$, 我们称由 $S$ 诱导的 $G$ 的子图是以 $S$ 为顶点集, 边集取极大的图, 记作 $G[S]$, 也就是说,所有以 $S$ 为顶点集的 $G$ 的子图, 都是 $G[S]$ 的子图. 我们将 $G[S]$ 称作 $G$ 的一个诱导子图或导出子图
+
+对于正整数 $n$, $n$ 阶的完全图是指含有 $n$ 个顶点, 且顶点两两连边的图, 记作 $K_n$.特别地, 如果图 $G$ 的一个子图 $H$ 是完全图, 那么称 $H$ 为 $G$ 上的一个团. 图 $G$ 上团的最大阶数叫做图 $G$ 的团数, 记作 $\omega(G)$, 根据定义可以知道 $\omega(G) \leq \Delta(G)+1$.
+
+图 $G$ 的独立集是指一列顶点 $S \subset V(G)$, 使得 $G[S]$ 中不包含边. 特别地, 图 $G$ 的两个点如果不相邻, 则称他们是独立的.
+
+对于给定的图 $G$ 和颜色集 $C$, 其中$C$ 可以是一列具体的颜色, 也可以是正整数集 $[k] = \{1,2,\cdots,k\}$, 图 $G$ 上的一个染色或者顶点染色是指一个映射 $\varphi : V(G) \rightarrow C$.  如果当 $u \sim v$时, 必有 $\varphi(u) \neq \varphi(v)$, 那么我们说染色 $\varphi$ 是正常的. 当图 $G$ 上存在一个正常染色, 满足颜色集 $|C| = k$ 时, 我们称 $G$ 是 $k-$可染的. 图的色数定义为 $G$ 上使用颜色最少的正常染色所使用的染色数, 记作 $\chi(G)$. 如果对于图 $G$ 存在一个染色数为 $k$ 的正常染色, 可以按 $k$ 个颜色将 $G$ 的顶点分成 $k$ 个部分, 每个部分都是图 $G$ 的一个独立集. 在不引起歧义的情况下, 我们有时也用图的染色来指代图的正常染色.
+
+类似地, 也有图的边染色: 对图的每条边分配一个颜色, 使得具有相同端点的边所得到的染色不同;以及平面图的面染色: 对平面图的每个面分配一个颜色, 使得具有相同边界的面所得到的染色不同. 然而, 它们都可以转换为图的顶点染色, 图的边染色实际上就是对它的线图顶点染色; 平面图的面染色也就是对它的对偶图顶点染色.
+
+路是指由顶点集 $\{v_1,v_2,\cdots,v_n\}$ 和边集 $\{v_1v_2,v_2v_3\cdots,v_{n-1}v_n\}$ 所组成的图, 简写为 $v_1 v_2 \cdots v_n$, 在不引起歧义的情况下, 有时也用路 $v_1v_n$ 指代这条路, 如果路的阶数是 $n$, 就称它为 $n$ 长路, 记作 $P_n$. 一个图是连通的, 就是说它的任意两个顶点都能成为一条路的两个端点;反之则称该图不连通.
+
+一个连通图 $G$ 的团割是指一个 $G$ 中的团 $V$, 使得 $G \setminus V$ 不是连通的.
+
+圈是指在一条路的第一个顶点和最后一个顶点间添加一条连边后所得到的一类图. 特别地, $P_3$ 所形成的圈称为三角. 如果一条边连接了圈中两个不相邻的顶点, 使这两个顶点相邻, 那么将它称作这个圈的弦.
+
+帽图是长度大于 $4$ 的圈添加一条弦所得到的, 这条弦的两端点恰好是一条三长路 $xyz$ 的两端点, 即 $xyz$ 与此弦构成了一个三角(图\ref{cap}).
+
+\begin{figure}[t]
+    \begin{minipage}[t]{0.35\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{P3andK3.pdf}
+        \caption{$P_3$ 和 $K_3$}
+        \label{P3andK3}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.3\textwidth} 
+        \centering
+        \includegraphics[width=\textwidth]{cap.pdf}
+        \caption{帽图}
+        \label{cap}
+    \end{minipage}
+\end{figure}
+
+图 $G$ 的一个导出子图上被称为洞, 如果它是一条长度大于等于 $4$ 的圈. 同样地, 如果一个洞的阶数是 $n$, 就称它为 $n$ 长洞; 如果一个洞的顶点数为奇数(偶数), 就称它为奇洞(偶洞).
+
+图 $G = (V(G), E(G))$ 和 $H = (V(H), E(H))$ 同构, 指的是存在一个双射 $f: V(G) \rightarrow V(H)$ 使得 $u,v$ 相邻当且仅当 $f(u),f(v)$ 相邻.
+
+对于给定的图 $H$, 如果不存在 $G$ 的导出子图与 $H$ 同构, 则称 $H$ 为 $G$ 的禁止子图, 此时, 称 $G$ 是无 $H$ 的图. 特别地, 无帽无偶洞图是指一类所有导出子图既不与帽图同构, 也不与偶洞同构的图.
+
+图积是一种图上的二元运算, 用来产生新的图. 一般来说, 对于图 $G,H$, 他们的图积的顶点集是各自顶点集的笛卡尔积 $V(G) \times V(H)$, 图积中两顶点 $u = (g,h),v = (g',h')$ 的邻接关系完全取决于 $g$ 和 $g'$ 以及 $h$ 和 $h'$ 的邻接关系.我们会在后文具体定义图的笛卡尔积, 直积以及强积.
+
+图 $G$ 的团膨胀是指, 将图 $G$ 的全部顶点 $v_1, ,v_2, \cdots , v_n$ 替换为两两无交的完全图(团) $G_1, G_2, \cdots , G_n$, 并且如果 $v_i \sim v_j$, 那么 $G_i, G_j$ 全连接, 即在 $G_i, G_j$ 中分别任取到的两个顶点之间都连边.
+
+\subsection{研究现状}
+对于一般的图 $G$, 色数 $\chi(G)$ 的计算是 NP-hard 问题, 因此寻找图 $G$ 的相关参数给出的对 $\chi(G)$ 的约束成为了一个重要的研究方向. 一个最简单的上界是 $G$ 的阶数 $n$, 因为我们使用 $[n]$ 可以给每个顶点分配一个不同的颜色. 对于完全图, 它的色数刚好达到这个上界, 因为它的每对顶点都相邻. 考虑到图 $G$ 的最大团是完全图, 同时也是 $G$ 的子图, 因此 $\omega(G)$ 是 $\chi(G)$ 的一个下界, 根据 Erdös\cite{Erdös1959} 的著名结果, 色数和团数的差距可以任意大. 而 $\chi(G)$ 还有一个明确的上界 $\Delta(G)+1$, 事实上, 对于颜色集 $C = \{1,2,\cdots,\Delta(G)+1\}$, 我们使用贪心算法, 以任意顺序依次遍历图 $G$ 的每个顶点, 在到顶点 $v$ 时, 对其使用 $C \setminus D_v$ 中一个颜色染色即可, 这里 $D_v$ 是与 $v$ 相邻且已经被染色的顶点所使用的全部颜色, 因为 $d(v) \leq \Delta(G)$, 所以 $|D_v|+1 \leq d(v)+1 \leq |C|$, 我们总能保证至少存在一种颜色未被占用. 由上, 对于任意的图 $G$, $\omega(G) \leq \Delta(G)+1$.
+
+1941年, Brooks \cite{Brooks1987}证明了: 如果图 $G$ 不是完全图或奇圈, 那么 $\chi(G) \leq \Delta(G)$. Borodin 和 Kostochka, Catlin, 以及 Lawrence 独立证明了: 对于满足 $\omega(G) \leq r$ 且 $\Delta(G) \geq r \geq 3$ 的图 $G$, $\chi(G) \leq \frac{r}{r+1}(\Delta(G)+2)$.
+
+1998年, Reed\cite{Reed1998} 猜想任意图的色数能被我们之前给出的上界和下界的平均数约束, 也就是下面的猜想:  
+
+\begin{Conjecture}\label{ReedConjecture}
+对于所有的图 $G$, 都有 $\chi (G) \leq \left\lceil \dfrac{\omega (G) + \Delta (G) + 1}{2}  \right\rceil $
+\end{Conjecture}
+
+为了方便, 我们将 Reed 给出的上界记作 $\gamma(G)$, 图 $G$ 满足 Reed 猜想, 可以表示为 $\chi(G) \leq \gamma(G)$. 当 $\omega(G) \geq \Delta(G)$ 时, 易知 Reed 猜想成立, 再根据 Brooks 定理, 我们知道在 $\omega(G) \geq \Delta(G) - 2$ 时, Reed 猜想都成立. Reed 猜想中的向上取整是必要的, 因为 Chvátal图的色数为 $4$(见图\ref{ChvátalGraph}), 而它是$4-$正则的无三角图\cite{Chvátal1970}, 从而 $\gamma(G) = \left\lceil \dfrac{2 + 4 + 1}{2}  \right\rceil = \left\lceil \dfrac{7}{2}  \right\rceil = 4$, 达到了 Reed 猜想的上界.
+
+\begin{figure}[b]
+    \begin{minipage}{0.35\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{Chvátal.pdf}
+    \caption{Chvátal 图的一个染色}
+    \label{ChvátalGraph}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.35\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{otimes.pdf}
+    \caption{$P_3\otimes K_3$}
+    \label{otimes_pic}
+    \end{minipage}
+\end{figure}
+
+
+猜想\ref{ReedConjecture} 的一个变体是:
+
+\begin{Conjecture}\label{ReedConjecture2}
+    对于所有最大度 $\Delta(G) \geq 3$ 的图 $G$, 都有 $\chi (G) \leq \dfrac{\omega (G) + 2(\Delta (G) + 1)}{3}$
+\end{Conjecture}
+
+同样地, 我们将猜想\ref{ReedConjecture2} 给出的上界记作 $\gamma'(G)$ . 最大度 $\Delta(G) \geq 3$ 这一条件排除了三角图. 容易知道, 当 $\Delta(G) - 2 > \omega(G)$ 时, 这一猜想给出的上界更大.
+
+直接证明 Reed 猜想成立似乎是困难的, 但在一些特殊的情况下, 可以证明 Reed 猜想成立. 当 $\Delta(G)$ 充分大而 $\omega(G)$ 充分接近于 $\Delta(G)$ 时, Reed\cite{Reed1998} 证明了该猜想总成立, 即定理\ref{Reedthm}. Aravind 等人\cite{AKS2011}在 2011 年证明了无奇洞图满足 Reed 猜想, 即定理\ref{AKSthm}. 
+
+\begin{thm}[\cite{Reed1998}]\label{Reedthm}
+    存在一个常数 $\Delta_0$, 使得对于 $\Delta \geq \Delta_0$ , 最大度为 $\Delta$ 的图 $G$ , 它的团数 $\omega$ 满足 $\omega \geq \left \lfloor (1-\dfrac{1}{70000000})\Delta \right \rfloor$ 时, 有 $\chi(G) \leq \dfrac{\omega + \Delta + 1}{2}$.
+\end{thm}
+
+\begin{thm}[\cite{AKS2011}]\label{AKSthm}
+    若 $G$ 是一个无奇洞图, 那么 $\chi(G) \leq \gamma(G)$.
+\end{thm}
+
+
+本文证明了如果图 $G,H$ 满足Reed猜想, 那么 $G \otimes H, G \times H$ 都满足Reed猜想, 而$G \boxtimes H$ 满足Reed猜想的变体(猜想\ref{ReedConjecture2}); 五长洞, 奇洞等的团膨胀满足Reed猜想, 进而推出无帽无偶洞图满足Reed猜想.
+
+\section{图积}
+\subsection{笛卡尔积}\label{Carstian}
+设图 $G,H$ 是顶点集 $V(G), V(H)$ 和边集 $E(G), E(H)$ 都无交的两个图, 其中 $V(G)=\{g_1, g_2,\cdots, g_n \}$, $V(H)=\{h_1, h_2,\cdots, h_m \}$. 我们用记号~$D = G \otimes H$ 表示 $G$ 和 $H$ 的笛卡尔积 $(Carstian\ Product)$. $D$ 的顶点集为 $V(G) \times V(H)$, 且对任意 $u = (g_i,h_j), v = (g_k,h_l)\in V(D)$, $u\sim v$ 当且仅当 $g_i = g_k,  h_j \sim  h_l$ 或 $g_i \sim g_k,  h_j = h_l$.
+由定义可知, $G \otimes H$ 同构于 $G \otimes H$. 
+
+对任意 $g_i \in V(G)$, 定义图 $D[g_i]$ 为点集 $V(D[g_i]) =  \{ u|u = (g_i, h_j), h_j \in V(H) \}$ 在图 $D$ 上诱导的子图. 同理我们可以定义 $D[h_j]$. 易见, $D[g_i] \cong H$, $D[h_j] \cong G $, 从而 $D[g_i]$ 可以看作 $H$ 在坐标分量 $g_i$ 下所成的 $D$ 的子图, $D[h_j]$ 可以看作 $G$ 在坐标分量 $h_j$ 下所成的 $D$ 的子图. 且有 $V(D[g_i])\cap V(D[h_j]) =\{ (g_i,h_j) \}, \underset {g_i \in V(G)}{\bigcup} V(D[g_i]) = V(D), \underset {h_j \in V(H)}{\bigcup} V(D[h_j]) = V(D)$. 
+
+\begin{lemma}\label{lem0}
+    若 $D = G \otimes H$,则 $\Delta (D) = \Delta (G) + \Delta (H)$.
+\end{lemma} 
+
+\begin{pf}\label{pf1}
+    任选 $ u\in D$, $u = (g_i,h_j)$, 故 $\{u\}=V(D[g_i])\cap V(D[h_j])$. 从而, $d(u) = d_{D[g_i] }(u) + d_{D[h_j]}(u)$.
+    因为 $D[g_i] \cong H$, $D[h_j] \cong G $, 所以 $d_{D[g_i] }(u)= d_{H}(h_j)$, $d_{D[h_j] }(u)= d_{G}(g_i)$. 即 $d(u)= d_{H}(h_j)+ d_{G}(g_i)$.
+    
+    设 $ g_{i'} \in G, h_{j'} \in H$, 满足 $d_{G}(g_{i'}) = \Delta (G),d_{H}(h_{j'}) = \Delta (H)$.
+    取 $v' = (g_{i'},h_{j'})$. 故 $d(v') = \Delta (G) + \Delta (H) \ge d(u)$,
+    从而 $\Delta(D) = \Delta(G) + \Delta(H)$.  \qed
+
+\end{pf}
+
+\begin{lemma}\label{lem1}
+   设 $D = G \otimes H $. 则对任意 $v\notin D[g_i]$, 有 $|N(v)\cap D[g_i]|\leq 1$.
+\end{lemma}
+
+\begin{pf}
+    设 $v = (g_{i'},h_{j'}) \not\in D[g_i]$. 则有 $g_{i^{'}} \neq g_i$. 设存在 $u = (g_i,h_j)$, 满足 $ u\in N(v)\cap D[g_i]$. 根据 $D$ 的定义, $h_{j'} =  h_j$, 那么有 $u = (g_i,h_{j'})$, 也就是说 $ u$ 是唯一确定的, 故命题得证. \qed
+\end{pf}
+
+由引理 \ref{lem1}, 我们知道 $G \otimes H$ 实际上是在 $D[g_i] $ $(i = 1,\cdots, n)$ 间将对应坐标相同的点连边得到, 同样也可以看作在 $D[h_j]$ $(j = 1,\cdots,m)$ 间按对应点连边得到.
+
+\begin{lemma}\label{lem2}
+    设 $D = G \otimes H$. 则 $\omega (D) = \max\{ \omega (G),\omega (H)\}$.
+\end{lemma}
+
+\begin{pf}
+    设 $C$ 是 $D$ 中最大团, 并取 $u = (g_i,h_j)\in C$. 不妨设 $|V(C)|\geq 2$, 否则是平凡的. 任取 $ v \in C$ 且 $v \neq u$, 则 $u \sim v $. 于是要么 
+    $v \in D[h_j]$, 要么  $v \in D[g_i]$. 从而, $V(C) \subseteq V(D[g_i])\cup V( D[h_j])$. 由引理 \ref{lem1}, $|V(C) \cap V(D[g_i])|\ge 2$ 和 $|V(C) \cap V(D[h_j])| \ge 2$ 不可能同时成立, 从而 $|V(C)| \le \omega(H)$ 或 $|V(C)| \le \omega(G).$
+    又 $\omega(D) \ge \max\{ \omega(G),\omega(H)\}$ 显然成立, 故 $\omega(D) = \max\{ \omega(G),\omega(H)\}$.\qed
+\end{pf}
+
+
+设图 $G$ 的染色数为 $n$, 给定颜色集 $C = \{ c_1,c_2,\ldots ,c_n\}$, 则可以给 $V(G)$ 一个染色:
+        $$ \psi: V(G) \rightarrow C. $$
+        
+        
+\textbf{无交染色}：对 $V(G) \rightarrow C$ 的两个染色 $f_i,f_j$, 若
+$$f_i(v) \neq f_j(v) \quad (\forall v \in V(G))$$
+
+则称 $f_i$ 与 $f_j$ 在图 $G$ 上按颜色集 $C$ 是一对无交染色. 同理, 若染色集 $F = \{  f_1,f_2,\ldots,f_n \}$ 中的元素 $f_i$ 对于 $G$ 按 $C$ 两两互为无交染色, 则称 $F$ 是一组无交染色, $G$ 至少有 $n$ 种无交染色.
+
+\begin{lemma}\label{thm3}
+    若 $\chi(G)=n $, 则 $G$ 至少有 $n$ 种无交染色.   
+\end{lemma}
+
+\begin{pf}
+    由 $\chi(G)=n $, 则存在 $C = \{ c_1,c_2,\ldots ,c_n\}$ 及 $f_1 :V \rightarrow C,f_1(\left\langle v\right\rangle _i) = c_i$, 其中, $\left\langle v\right\rangle _i$ 是所有被染为 $c_i$ 的顶点, 如下所示
+    $$
+    \begin{matrix}
+        V &\left\langle v\right\rangle _1  &\left\langle v\right\rangle _2 &\cdots &\left\langle v\right\rangle _n\\
+        f_1 &c_1 &c_2 &\cdots &c_n\\
+
+    \end{matrix}
+    $$
+    
+    我们按以下规则定义一组新的 $G$ 按颜色集 $C$ 的染色
+    $$
+    \begin{matrix}
+        V &\left\langle v\right\rangle _1  &\left\langle v\right\rangle _2 &\cdots &\left\langle v\right\rangle _n\\
+        f_1 &c_1 &c_2 &\cdots &c_n\\
+        f_2 &c_2 &c_3 &\cdots &c_1\\
+        \vdots &\vdots &\vdots &\ddots &\vdots\\
+        f_n &c_n &c_1 &\cdots &c_{n-1}
+    \end{matrix}
+    $$
+    
+    不难验证, $f_i$ 是 $G$ 上的正常染色, 且 $\forall i \neq j,f_i$ 与 $f_j$无交. 这样, 找到了 $n$ 种无交的染色, $F = \{  f_1,f_2,\ldots,f_n \}$.  \qed
+\end{pf}
+
+
+将 $D = G \otimes H$ 看作一组 $D[g_i] \ (i = 1,\cdots,n)$ 间对应点连边.
+由于 $D[g_i] \cong H$, 因此可以将 $H$ 的染色 $f$
+\begin{equation*}
+    \begin{aligned}
+        f:V(H) &\rightarrow C\\
+        h_j &\mapsto c
+    \end{aligned}
+    \label{map1}
+\end{equation*}
+作为 $D[g_i]$ 的染色, 定义如下
+\begin{equation*}
+    \begin{aligned}
+        f:V(D[g_i]) &\rightarrow C\\
+        (g_i,h_j) &\mapsto c
+    \end{aligned}
+    \label{map2}
+\end{equation*}
+如果分别给 $D[g_s],D[g_t]$ 两个在图 $H$ 上按颜色集 $C$ 的无交染色 $f_s,f_t$, 则对于两图中可能相邻的 $u = (g_s,h_j), v = (g_t,h_j)$, 因为 $f_s,f_t$ 是一对无交染色, 有 $f_s(u) = f_s(h_j) \neq f_t(h_j) = f_t(v)$, 所以该染色仍然是对于 $G$ 中 $D[g_s] \cap D[g_t]$ 整体按颜色集 $C$ 的正常染色.
+
+
+\begin{thm}\label{main thm}
+    若 $D = G \otimes H$,  则 $\chi (D) \leq \max \{\chi (G), \chi (H)\}$.
+\end{thm}
+\begin{pf}\label{mainthm}
+  不妨设 $\chi(G)\leq \chi(H)$. 我们先给图 $H$ 染色:
+  $$\phi: V(H)\rightarrow [k];$$
+  其中 $[k]=\{1,2,\cdots, k\}$ 是颜色集且 $k=\chi(H)\leq \gamma(H)$. 由定理 \ref{thm3} 的证明, ~$H$ 有 $k$ 种无交的染色, $\Phi = \{  \phi_1,\phi_2,\ldots,\phi_k \}$. 
+  
+  同样, 我们给图 $G$ 染色:
+  $$\psi: V(G)\rightarrow [l];$$
+  其中 $[l]=\{1,2,\cdots, l\}$ 是颜色集, 且 $l = \chi(G) \leq \gamma(G)$.
+  
+
+  接下来我们给 $D[g_i]$ 染色. 如果在 $G$ 中, $\psi(g_i)=s$, 那么我们就用 $\phi_s$ 来染 $D[g_i]$,  因为$l \leq k$, 这总是可以做到的. 下面我们来验证该染色是正常染色.
+
+   $D[g_{i_{(s)}}],D[g_{i_{(t)}}]$ 间存在连边时, 意味着 $g_{i_{(s)}} \sim g_{i_{(t)}}$, 由于 $\psi$ 是 $G$的染色,那么有 $\psi(g_{i_{(s)}})) \neq \psi(g_{i_{(t)}})$, 根据对 $D[g_i]$ 染色选择的方式, 得到$\phi(D[g_{i_{(s)}}]) \neq \phi(D[g_{i_{(t)}}])$, 从而在此时一定是一对无交染色.已经证明, 当 $D[g_{i_{(s)}}],D[g_{i_{(t)}}]$ 存在连边时,选择一对无交染色可以对 $G$ 中 $D[g_{i_{(s)}}],D[g_{i_{(t)}}]$ 整体正常染色.
+
+  $D[g_{i_{(s)}}],D[g_{i_{(t)}}]$ 间不存在连边时, 显然选择的染色在 $D[g_{i_{(s)}}],D[g_{i_{(t)}}]$ 间是正常染色.
+
+  由上推知, 我们选择的染色方式满足: $D$ 中任意两个 $D[g_{i_{(s)}}],D[g_{i_{(t)}}]$ 间都是正常染色,考虑到 $\underset {g_i \in V(G)}{\bigcup}V (D[g_i]) = V(D)$, 从而对 $G$ 中任意两点间都是正常染色, 我们选择的是关于颜色集 $[k]$ 的正常染色.
+
+  即得到 $\chi(G) \leq \chi (H)$. \qed  
+\end{pf}
+
+我们给出的约束: $\chi (D) \le \max \{\chi (G), \chi (H)\}$ 不能更改为 $\chi (D) \le \min \{\chi (G), \chi (H)\}$. 事实上，只需考虑完全图 $K_i,K_j(i < j)$，那么有 $\chi(K_i \otimes K_j) = \chi(K_j) = j > i = \chi(K_i)$.第一个等号一定成立，因为我们已经证明 $\chi(K_i \otimes K_j) \leq \chi(K_j)$; 而如果 $\chi(K_i \otimes K_j) < \chi(K_j)$, 那么总能找出一个同构于 $K_j$ 的 $K_i \otimes K_j$ 的导出子图 $G_0$ , $G_0$ 至多是 $\chi(K_i \otimes K_j)$ 可染的, 与假设矛盾.
+
+\begin{thm}
+    若 $D = G \otimes H$, 且 $\chi (G) \le \gamma (G), \chi (H) \le \gamma (H) $, 则 $\chi (D) \le \gamma (D)$.
+\end{thm}
+\begin{pf}
+    根据引理 \ref{lem0} 以及引理 \ref{lem2}, 我们有 
+    \begin{align*}
+        \gamma(D) &= \left\lceil \dfrac{\omega (D) + \Delta (D) + 1}{2}  \right\rceil  \\
+                &= \left\lceil \dfrac{\max\{ \omega (G),\omega (H)\} + \Delta (G) + \Delta (H) + 1}{2}  \right\rceil\\
+                &\geq \max\{\gamma(G),\gamma(H)\}
+    \end{align*}
+    又由定理\ref{main thm}, $\max \{\chi (G), \chi (H)\} \geq \chi(D)$, 根据条件 $\chi (G) \le \gamma (G), \chi (H) \le \gamma (H) $, 所以我们有 $\gamma(D) \geq \max\{\gamma(G),\gamma(H)\} \geq \max \{\chi (G), \chi (H)\} \geq \chi(D)$, 命题得证. \qed
+\end{pf}
+
+\subsection{直积}
+图 $G,H$ 的直积 $(Direct \ Procuct)$, 也称图的张量积 $(Tensor \ Product)$ . 记作 $D = G \times H$ ,顶点集与笛卡尔积相同, 对任意$(g,h), (g',h') \in D, (g,h) \sim (g',h')$ 当且仅当 $g \sim g',$ 且 $ h \sim h'$.
+
+\begin{figure}[b]
+\begin{center}
+\includegraphics[scale=1]{times.pdf}
+\caption{$P_3\times K_3$}
+\label{times_pic}
+\end{center}
+\end{figure}
+
+\begin{lemma}\label{lem21}
+    若 $D = G \times H$,则 $\Delta(D) = \Delta(G) \Delta(H)$
+\end{lemma}
+    
+\begin{pf}
+    任选 $(g,h) \in D$ 
+    
+    对任意 $ (g',h') \in N(g,h)$, 有$g \sim g', h \sim h'$,也就是 $g' \in N_{|G}(g), h' \in N_{|H}(h)$，即 $(g',h') \in N_{|G}(g) \times N_{|H}(h)$, 在这里, $N(g,h)$ 指的是 $(g,h)$ 在 $D$ 中的所有邻点, 而 $N_{|G}(g)$ 则是 $g$ 在 $G$ 中的所有邻点, 同样定义 $N_{|H}(h)$. 
+    
+    而 $\forall (g',h') \in N_{|G}(g) \times N_{|H}(h)$, $g \sim g', h \sim h'$, 从而 $(g',h') \in N(g,h)$.
+    于是我们得到了 $N(g,h) = N_{|G}(g) \times N_{|H}(h)$.
+    
+    考虑 $(g,h)$ 的任意性， 则有 $\Delta(D) = \Delta(G) \Delta(H)$. \qed
+\end{pf}
+
+按照定义, 以下引理是显然的.
+
+\begin{lemma}\label{lem22}
+    对任意 $ g_0 \in G, D[g_0] = \{(g_0,h) | h \in H\}$ 是 $G \times H$ 的一个独立集
+\end{lemma}
+
+同样的结论对 $D[h_0] = \{(g,h_0) | g \in G\} (\forall h_0 \in H)$ 也成立. 这说明了直积 $G \times H$ 及其子图的边只存在于不同的子图 $D[g_i],D[g_j]$ (或者 $D[h_i],D[h_j]$) 之间. 
+
+\begin{lemma}\label{lem23}
+    若 $D = G \times H$,则 $\omega(D) = \min \{\omega(G), \omega(H)\}$
+\end{lemma}
+
+\begin{pf}
+    任选 $G \times H$ 的一个团, 由引理\ref{lem22}, 可以设它的顶点集 $V = \{(g_1,h_1), (g_2,h_2), \cdots,\\ (g_k,h_k)\}$. 根据团的定义, $\forall i \neq j$,有 $(g_i,h_i) \sim (g_j,h_j)$, 再根据直积定义, $g_i \sim g_j, h_i \sim h_j$. 从而 $V_1\{g_1, g_2 \cdots, g_k\}$ 是 $G$ 的一个团的顶点集, 同样 $V_2 = \{h_1, h_2 \cdots, h_k\}$ 是 $H$ 的一个团的顶点集.故 $\omega(G \times H) \leq \min \{\omega(G), \omega(H)\}$. 
+
+    接着证明等号一定成立. 不妨假设 $\omega(G) = p, \omega(H) = q$ 且 $p \leq q$, $G' = \{g'_1, g'_2, \cdots, g'_p\},\\ H' = \{h'_1, h'_2, \cdots, h'_q\}$ 分别是 $G, H$ 的一个最大团, 注意到, $G' \times H'$ 是 $G \times H$ 的一个子图, 不难验证, 顶点集 $\{(g'_1,h'_1), (g'_2,h'_2), \cdots, (g'_p, h'_p)\}$ 在 $G \times H$ 中两两连边, 从而成为 $G \times H$ 的一个团, 故 $\omega(G \times H) \geq p$, 得证. \qed 
+\end{pf}
+
+\begin{lemma}\label{lem24}
+    若 $D = G \times H$,则 $\chi(D) \leq \min \{\chi(G), \chi(H)\} $
+\end{lemma}
+\begin{pf}
+    不放假设 $\chi(G) \leq \chi(H)$, 记 $k = \chi(G)$, 有 $G$ 的一个染色 $\phi:G \rightarrow [k]$.定义如下的染色 $\varphi:D \rightarrow [k]$, 对每个 $u = (g,h)\in D$, $\varphi(u) = \phi(g)$.下面验证这样的染色是正常的, 考察 $u$ 的邻点 $v=(g',h')$, 由定义, $g \sim g'$, 故 $\varphi(u) = \phi(g) \neq \phi(g') = \varphi(v)$.命题得证. \qed
+\end{pf}
+
+事实上, S.T.Hedtniemi\cite{Hedetniemi1967} 在 1966 曾提出猜想: 若 $D = G \times H$,则 $\chi(D) = \min \{\chi(G), \chi(H)\} $. 然而, Yaroslav Shitov\cite{shitov2019} 于 2019 给出了反例证明了不等号可以严格成立. 
+
+\begin{thm}
+    若 $D = G \times H$, 且 $\chi (G) \le \gamma (G), \chi (H) \le \gamma (H) $, 则 $\chi (D) \le \gamma (D)$.
+\end{thm}
+\begin{pf}
+    根据引理 \ref{lem21} 以及引理 \ref{lem23}, 我们有 
+    \begin{align*}
+        \gamma(D) &= \left\lceil \dfrac{\omega (D) + \Delta (D) + 1}{2}  \right\rceil  \\
+                &= \left\lceil \dfrac{\min \{\omega(G), \omega(H)\} + \Delta(G) \Delta(H) + 1}{2}  \right\rceil\\
+                &\geq \min \{\chi(G), \chi(H)\}
+    \end{align*}
+    又由引理\ref{lem24}, $\chi(D) \leq \min \{\chi(G), \chi(H)\} $, 根据条件 $\chi (G) \le \gamma (G), \chi (H) \le \gamma (H) $, 所以我们有 $\gamma(D) \geq \min \{\chi(G), \chi(H)\} \geq \min \{\chi(G), \chi(H)\} \geq \chi(D)$, 命题得证. \qed
+\end{pf}
+
+\subsection{强积}
+
+\begin{figure}[b]
+\begin{center}
+\includegraphics[scale=1]{boxtimes.pdf}
+\caption{$P_3\boxtimes K_3$}
+\label{boxtimes_pic}
+\end{center}
+\end{figure}
+
+图 $G,H$ 的强积 $(Strong \ Procuct)$, 记作 $D = G \boxtimes H$ ,顶点集与笛卡尔积相同, 对任意 $u=(g,h), v=(g',h') \in D, u \sim v$ 当且仅当 $g \sim g'$ 且 $ h \sim h'$ 或 $g = g',  h \sim h'$ 或 $g \sim g', h = h'$. 这是说, 强积的边集是由笛卡儿积的边集和直积的边集取并得到的, 也就是下面的引理.
+
+\begin{lemma}\label{lem31}
+    若 $D=G \boxtimes H$, $E(D) = E(G \otimes H) \cup E(G \times H)$
+\end{lemma}
+
+又由定义容易知道 $E(G \otimes H) \cap E(G \times H) = \varnothing$, 再根据引理\ref{lem0},\ref{lem21}, 可以推出:
+
+\begin{lemma}\label{lem32}
+    若 $D = G \boxtimes H$, 则 $\Delta(D) = \Delta(G \otimes H) + \Delta(G \times H) = \Delta(G) + \Delta(H) + \Delta(G)\Delta(H)$
+\end{lemma}
+
+同笛卡尔积, 对于任意 $g_i \in V(G)$, 定义图 $D[g_i] = D[\{ u|u = (g_i, h_j), h_j \in V(H) \}]$, 图 $D[h_j] = D[\{ u|u = (g_i, h_j), g_i \in V(G) \}]$ .同样, 可以知道 $D[g_i] \cong H$, $D[h_j] \cong G$. $D = G \boxtimes H$ 可以看作 $|H|$ 个 $G$ 通过某种方式连边得到.
+
+对于顶点 $u=(g,h) \in D$, 如果我们定义 $N_{|G}(g)$ 为 $g$ 在 $G$ 上的邻点, $N_{|h'}(u) = D[h'] \cap N(u)$, 那么我们有下面的引理  
+
+\begin{lemma}\label{lem33}
+    若 $D = G \boxtimes H$, 且 $u=(g,h) \in D$, 则当 $h' \sim h$ 时, $G[N_{|G}(g) \cup g] \cong D[N_{|h'}(u)]$.
+\end{lemma}
+\begin{pf}
+    考虑 $f: G[N_{|G}(g) \cup g] \rightarrow D[N_{|h'}(u)]$, $f(g_i) = (g_i,h')$. 因为 $g_i \in G[N_{|G}(g) \cup g]$ 时, $g_i = g$ 或 $g_i \sim g$, 故 $f(g_i) = (g_i,h') \sim (g,h)$, 这意味着 $f(g_i) \in N(u)$, 从而 $f(g_i) \in D[N_{|h'}(u)]$, 故 $f$ 是一个映射. $f$ 是单射是显然的. 而对每一 $(g',h') \in D[N_{|h'}(u)]$, $g' = g$ 或 $g' \sim g$, 于是 $g_i = g' \in G[N_{|G}(g) \cup g]$, 满足 $f(g_i) = (g',h')$, 推出 $f$ 是满射. 又因为 $f$ 实际上也是 $G$ 与 $D[h_j]$ 间的同构映射, 可以保持映射前后的连边关系, 所以也保持了他们的导出子图映射前后的连边关系, $f$ 是 $G[N_{|G}(g) \cup g] $ 与 $D[N_{|h'}(u)]$ 间的同构映射. \qed
+\end{pf}
+
+引理\ref{lem33}说明了, 对于 $G \boxtimes H$ 上的一点 $u=(g_i,h_j)$, 如果 $u$ 在 $D[h']$ 中, 那么它在$D[h']$ 上的邻域完全与 $g$ 在 $G$ 上的邻域同构;如果它不在 $D[h']$中而和 $D[h']$ 有连边, 那么它在 $D[h']$ 上的邻域完全与 $g$ 并上 $g$ 在 $G$ 上的邻域同构. 于是我们将 $u$ 的邻域较为清楚地分解到了每个 $D[h_j]$ 上. 同样地, 也可以分解到每个 $D[g_i]$ 上.
+
+类似地, 可以将 $G \boxtimes H$ 的一个团按坐标 $h$ 分解为 $\{G_{h_1}, G_{h_2}, \cdots, G_{h_m} \}$, 此时有 $G_{h_i}$ 同构于 $G$ 的一个团. 对于$G \boxtimes H$ 上的最大团 $D'$, 我们猜想作如上分解, 并排除空集后, 每个 $G_{h_i}$ 的第一维坐标组 $V_{1}(G_{h_i})$ 完全相同, 也就是:
+
+\begin{Conjecture}\label{con31}
+    $G \boxtimes H$ 的最大团 $D'$ 满足 $V_{1}(G_{h_i}) = V_{1}(G_{h_j}) (V_{1}(G_{h_i}) \neq \varnothing, V_{1}(G_{h_j}) \neq \varnothing)$.
+\end{Conjecture}
+\begin{pf}    
+    $G_{h_i}$ 同构于 $G$ 的一个团, 任选 $(g_0,h_i),(g,h_i) \in G_{h_i}$ ($g$ 可以是 $g_0$). 那么 $(g_0,h_i) \sim (g,h_j) (i \neq j)$. 根据 $D'$ 的极大性, $(g,h_j)$ 一定在 $D'$ 中, 否则 $D' \cup \{(g,h_j)\}$ 是 $D$ 的一个更大的团. 
+
+    也就是说, $G_{h_i}$ 中每一点$(g,h_i)$, 都能通过一个单射与 $G_{h_j}$ 中一点对应, 反过来也成立.由上, 每个非空 $G_{h_i}$ 的第一维坐标组完全相同.  \qed
+\end{pf}
+
+同理可知, 按坐标 $g$ 将 $G \boxtimes H$ 的最大团 $D'$ 分解成 $\{H_{g_1}, H_{g_2}, \cdots, H_{g_n} \}$ 后, 也有 $V_{2}(H_{g_i}) = V_{2}(G_{g_j})$.
+
+\begin{lemma}\label{lem34}
+    若 $D = G \boxtimes H$, 则 $\omega(D) = \omega(G)\omega(H)$
+\end{lemma}
+\begin{pf}
+    设 $G,H$ 上的一个最大团分别为 $G',H'$.因为 $G',H'$ 分别是 $G,H$ 的子图, 那么 $G' \boxtimes H'$ 是 $G \boxtimes H$ 的子图. 由引理\ref{lem33}, $G' \boxtimes H'$ 中每个点的邻域都是其它所有点, 故 $G' \boxtimes H'$ 是 $G \boxtimes H$ 的一个团.
+
+    设 $G \boxtimes H$ 上的最大团为 $D'$, 将其按坐标 $h$ 分解为 $\{G_{h_1}, G_{h_2}, \cdots, G_{h_m} \}$, 不妨设 $G_{h_1}$ 不为空, 由猜想\ref{con31}, 每个非空的 $G_{h_i}$ 都同构, 所以 $|D'|$ 能被 $|G_{h_1}|$ 整除, 设 $c = \frac{|D'|}{|G_{h_1}|}$, 再由猜想\ref{con31}, 每个非空 $G_{h_i}$ 的第一维坐标组完全相同, 从而 $D' \cong G_{h_1} \boxtimes K_c$, 其中 $K_c$ 是 $H$ 的一个团, 恰好由所有非空的 $G_{h_i}$ 的第二维坐标诱导出, 阶数为 $c$.
+
+    若 $|G_{h_1}| < |G'|$, 只需注意到 $G' \boxtimes K_c$ 是 $D$ 的更大的团即可, 故 $|G_{h_1}| = |G'|$. 同样对 $H'$ 也有对称的结论. 于是 $G' \boxtimes H'$ 是 $G \boxtimes H$ 的一个最大团, $\omega(D) = \omega(G)\omega(H)$. \qed
+\end{pf}
+
+\begin{thm}\label{thm31}
+    若 $D = G \boxtimes H$, 则 $\chi(D) \leq \chi(G)\chi(H)$
+\end{thm}
+\begin{pf}
+    只需找到一个关于 $D$ 的使用颜色数为 $\chi(G)\chi(H)$ 的染色即可. 记$\chi(G)=k, \chi(H)=l$, 对于 $G,H$ 有染色 $\phi_1 :G \rightarrow [k], \phi_2 :H \rightarrow [l]$. 只需设 
+    \begin{equation*}
+    \begin{aligned}
+        \varphi :D &\rightarrow [k]\times[l]\\
+        \varphi(g,h) &= (\phi_1(g),\phi_2(h))
+    \end{aligned}
+    \label{map2}
+    \end{equation*}
+
+    染色 $\varphi$ 可以看作对每个 $D[h_j]$ 都分配了一个染色 $\varphi_{(\phi_2(h_j))}$, 每个 $D[h_j]$ 内部按照 $\phi_1$ 对 $G$ 的染色方式染色, 但所用颜色增加了一个坐标 $\phi_2(h_j)$. 不同 $D[h_j]$ 间如果连边, 可以推出它们所用颜色的第二个坐标不同. 从而 $\varphi$ 是 $D$ 上的一个正常染色. \qed
+\end{pf}
+
+
+当我们使用Reed给出的上界$\gamma(G) = \left\lceil \dfrac{\omega (G) + \Delta (G) + 1}{2} \right\rceil$ 和 $\gamma(H) = \left\lceil \dfrac{\omega (H) +}{2} \right.$ \\
+$\left. \dfrac{ \Delta (H) + 1}{2}\right\rceil$ 替代 $\chi(G)$ 和 $\chi(H)$ 时, 有时会出现 $\gamma(G)\gamma(H) \geq \gamma(D)$. 例如, 对于 $P_3\boxtimes K_3$, $\gamma(P_3\boxtimes K_3) = \left\lceil \dfrac{2·3 + (2+2+2·2) + 1}{2} \right\rceil = \left\lceil \dfrac{6 + 8 + 1}{2} \right\rceil = 8$, 因为 $P_3,K_3$ 的色数分别为 $2, 3$, 由定理\ref{thm31}, $\chi(P_3 \boxtimes K_3) \leq 6$ 仍然满足 $\chi(D) \leq \gamma(D)$. 但 $\gamma(P_3) = \left\lceil \dfrac{2 + 2 + 1}{2} \right\rceil = 3, \gamma(K_3) = \left\lceil \dfrac{3 + 2 + 1}{2} \right\rceil = 3$ , $\gamma(P_3)\gamma(K_3) = 9 \geq 8 = \gamma(P_3 \boxtimes K_3)$, 这说明直接使用 $\gamma(G),\gamma(H)$ 替代色数不够紧.
+
+
+但是如果我们使用猜想\ref{ReedConjecture2} 所给出的另一个较弱的染色上界 $\gamma'(G) = \chi(G) \leq \frac{\omega(G) + }{3} \\ \frac{2(\Delta(G) + 1)}{3}$, 可以证明他们的强积是保持这一上界的, 即:
+
+\begin{thm}
+    若 $D = G \boxtimes H$, 且 $\chi(G) \leq \gamma'(G)$, $\chi(H) \leq \gamma'(G)$, 则 $\chi(D) \leq \gamma'(G)$
+\end{thm}
+\begin{pf}
+    首先, 为了方便, 我们将 $\omega(G),\omega(H)$ 用 $\omega_1, \omega_2$ 表示, $\Delta(G), \Delta(H)$ 用 $\Delta_1, \Delta_2$ 表示. 由定理\ref{thm31}, $\chi(D) \leq \chi(G)\chi(H)$, 如果我们能够证明下面的式子, 那么定理成立:
+    $$\frac{\omega_1 + 2(\Delta_1 + 1)}{3} \frac{\omega_2 + 2(\Delta_2 + 1)}{3} \leq \frac{\omega(D) + 2(\Delta(D) + 1)}{3}$$
+
+    代入引理\ref{lem32},\ref{lem33}, 我们将命题变为了:
+    $$\frac{(\omega_1 + 2\Delta_1 + 2) (\omega_2 + 2\Delta_2 + 2)}{9} \leq \frac{\omega_1\omega_2 + 2(\Delta_1+\Delta_2+\Delta_1\Delta_2 + 1)}{3}$$
+    
+    将左边展开得到:
+    $$\text{左边} = \frac{\omega_1\omega_2 + 2\omega_1\Delta_2 + 2\omega_1 + 2\omega_2\Delta_1 + 4\Delta_1\Delta_2 + 4\Delta_1 + 2\omega_2 + 4\Delta_2 + 4}{9}$$
+
+    将右边展开得到:
+    $$\text{右边} = \frac{3\omega_1\omega_2 + 6\Delta_1 + 6\Delta_2 + 6\Delta_1\Delta_2 + 6}{9}$$
+
+    接着, 将不等式两边同乘 $9$, 展开后左边减右边, 不等式化为:
+    $$-2\omega_1\omega_2 + 2\omega_1\Delta_2 + 2\omega_1 + 2\omega_2\Delta_1 - 2\Delta_1\Delta_2 -2\Delta_1 + 2\omega_2 - 2\Delta_2 -2 \leq 0$$
+
+    将新不等式左边按是否有交叉项拆分成两部分:
+    \begin{equation}
+    \begin{aligned}
+        -2\omega_1\omega_2 + 2\omega_1\Delta_2 + 2\omega_2\Delta_1 - 2\Delta_1\Delta_2
+    \end{aligned}
+    \label{strong_equation_1}
+    \end{equation}
+    \begin{equation}
+    \begin{aligned}
+        2\omega_1 -2\Delta_1 + 2\omega_2 - 2\Delta_2 -2
+    \end{aligned}
+    \label{strong_equation_2}
+    \end{equation}
+    
+    我们知道 $\omega_1 \leq \Delta_2 + 1, \omega_2 \leq \Delta_2 + 1$, 所以设 $\omega_1 = \Delta_1 + 1 - c_1, \omega_2 = \Delta_2 + 1 - c_2$, 其中 $c_1, c_2 \geq 0$. 代入后, (\ref{strong_equation_1}), (\ref{strong_equation_2}) 分别化简为:
+    $$2c_1 + 2c_2 - 2c_1c_2 -2$$
+    $$2 - 2c_1 - 2c_2$$
+
+    于是原不等式化为了:
+    $$-2c_1c_2 \leq 0$$
+
+    由于 $c_1, c_2 \geq 0$, 左式为非正数, 不等式得证. \qed
+
+\end{pf}
+
+\section{无帽无偶洞图}
+
+为了证明我们的结论, 我们先补充一些相关的定义和定理.
+
+一个与所有其他顶点都相邻的顶点称为全域顶点. 如果一个 $G$ 上的团 $C$ 中每个顶点都是全域顶点, 则称 $C$ 为全域团.
+
+对 $G$ 的每条边, 从 $\{0,1\}$ 中选取一个分配给它作为权重, 我们就给出了 $G$ 的一个赋号. 如果存在一个赋号使得 $G$ 中的每一个三角和每一个洞的边权重之和都为奇数, 那么就称 $G$ 为可奇赋号图. 显然每个无偶洞图都是可奇赋号图, 只需给每条边赋予权重 $1$, 那么每一个奇洞的边权重之和都为奇数, 由于不存在偶洞, 这一条件就对它的所有洞都成立, 从而它是可奇赋号图.
+
+设 $H$ 是 $G$ 的一个洞, 且 $xyz$ 是 $H$ 上的一个路径段. 如果一条诱导的 $xz$ 路 $P$ 的所有内部顶点都在 $V(G) \setminus V(H)$ 中, 并且 $G[(V(H)\setminus \{y\}) \cup V(P)]$ 是一个洞, 则称 $P$ 为洞 $H$ 的一个耳. 我们称 $x$ 和 $z$ 为耳 $P$ 在 $H$ 上的附着点.
+
+$G$ 的一个轮 $(H,v)$ 由一个洞 $H$ 和一个称为轮中心的顶点 $v$ 组成, 使得 $v$ 相对 $H$ 是全域顶点. 一个偶轮是指其中心在洞上有偶数个邻点的轮.
+
+如果图 $G$ 满足以下条件, 则称 $G$ 是由图 $F$ 通过一次耳添加得到的: (1) $V(G) \setminus V(F)$ 中的顶点是 $F$ 中某个洞 $H$ 的一个耳(设为 $P$, 其附着点为 $x$ 和 $z$) 的那些内部顶点; (2) $G$ 不包含 $V(P) \setminus \{x,z\}$ 中的顶点与 $V(F) \setminus \{x,y,z\}$ 中的顶点之间的边, 其中 $xyz$ 是 $H$ 的一段路经段. 一次耳添加被称为是良的, 如果满足
+\begin{itemize}
+    \item[$(i)$] $y$ 在 $P$ 中有奇数个邻点,
+    \item[$(ii)$] $F$ 中不存在轮 $(H_1,v)$, 其中 $x,y,z \in V(H_1)$ 且 $vy \in E(G)$, 
+    \item[$(iii)$] $F$ 中不存在轮 $(H_2,y)$, 其中 $x$ 和 $z$ 都是 $y$ 在 $H_2$ 中的邻点.
+\end{itemize}
+
+由完全二部图 $K_{4,4}$ 去除一个完美匹配生成的图叫做立方图.
+
+\begin{thm}[\cite{Cameron2018}]\label{cap_4hole}
+    设 $G$ 是一个含洞且没有团割的无帽无$4$长洞图. 若 $F$ 是任一满足至少有 $3$ 个顶点, 无三角也没有团割的 $G$ 上最大导出子图, 那么可以通过 先对 $F$ 做团膨胀, 再添加一个全域团得到 $G$.
+\end{thm}
+
+\begin{thm}[\cite{Conforti2000}]\label{triangle_free}
+    设 $G$ 是一个至少有 $3$ 个顶点, 不是立方图也没有团割的无三角图, 那么 $G$ 是可奇赋号图当且仅当它可以从一个洞开始, 通过一系列良耳朵添加获得.
+\end{thm}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=1.3]{5hole.pdf}
+\caption{五长洞}
+\label{5hole_pic}
+\end{center}
+\end{figure}
+
+\begin{thm}\label{thm41}
+    设 $H$ 是一个五长洞, 若 $G$ 是 $H$ 的一个团爆破, 那么 $\chi(G) \leq \gamma(G)$.
+\end{thm}
+\begin{pf}
+    将 $G$ 划分为五个部分, 分别记作 $X,Y,X_1,X_2,X_3$(图\ref{5hole_pic}), 它们都是 $G$ 的完全子图. 并设 $S$ 是一个颜色集, 满足 $|S| = \gamma(G)$, 接下来我们将证明使用 $S$ 中的颜色可以给出一个 $G$ 的正常染色 $\varphi$.
+
+    %这里要记得在前文定义好G[] 
+    首先, 因为 $G[X \cup Y]$ 是 $G$ 的一个完全子图, $\varphi(X) \cap \varphi(Y) = \varnothing$, 记 $S_1 = \varphi(X) \cup \varphi(Y)$ , 有 $|S_1| = |X| + |Y|$. 接着我们用 $S \setminus S_1$ 对 $X_1$ 染色. 如果$|S \setminus S_1| < |X_1| $, 即剩余一些未被染色的顶点, 那么我们再使用 $\varphi(Y)$ 中的颜色对剩余顶点染色, 记这些颜色全体为 $\varphi(Y_0), Y_0 \subseteq Y$, 可以证明剩余顶点数小于$ |\varphi(Y)| = Y$, 事实上, $|S \setminus S_1| + |Y| = \gamma(G) - (|X| + |Y|) + |Y| = \left\lceil \dfrac{\omega (G) + \Delta (G) + 1}{2}  \right\rceil - |X| \geq \omega(G) - |X| \geq |X_1|$, 最后一个不等式成立是因为 $X \cup X_1$ 是 $G$ 的一个团. 同样, 我们用  $S \setminus S_1$ 和 $\varphi(X_0)$ 对 $X_3$ 染色, 其中 $X_0 \subseteq X$. 显然, 我们可以使用 $\varphi(X \setminus X_0) \cup \varphi(Y \setminus Y_0)$ 对 $X_2$ 染色, 我们只需证明剩余的颜色足够将 $X_2$ 染色.
+
+    任取 $b \in X_2, d(v) = |X_1| + |X_2| -1 + |X_3| \leq \Delta(G)$, 同时 $|X| + |Y| \leq \omega(G)$, 那么有
+    \begin{align*}
+        |X_2|   &\leq \Delta(G)+1-|X_1|- |X_3|\\
+                &= \Delta(G)+1-(|S\setminus  S_1|+|\varphi(Y_0)|)-(|S\setminus  S_1|+|\varphi(X_0)|)\\
+                &= \Delta(G)+1-(\gamma(G)-|X|-|Y|+|Y_0|)-(\gamma(G)-|X|-|Y|+|X_0|)\\
+                &= \Delta(G)+1-2\gamma(G)+|X|+|Y| +(|X|+|Y| -|X_0|-|Y_0|)\\
+                &\leq \Delta(G)+1-(\Delta(G)+\omega(G)+1)+|X|+|Y| +(|X|+|Y| -|X_0|-|Y_0|)\\
+                &\leq |X|+|Y| -|X_0|-|Y_0|\\
+                &= |\varphi(X\setminus X_0)\cup \varphi(Y\setminus Y_0)|
+    \end{align*}
+
+    由上, 我们完成了证明. \qed
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=1.2]{two5hole.pdf}
+\caption{共用一边的两个五长洞}
+\label{two5hole_pic}
+\end{center}
+\end{figure}
+
+\begin{thm}\label{thm42}
+    设 $H$ 是共用一条边的两个五长洞, 若 $G$ 是 $H$ 的一个团爆破, 那么 $\chi(G) \leq \gamma(G)$.
+\end{thm}
+\begin{pf}
+    我们将 $G$ 划分为八个完全图(图\ref{two5hole_pic}), 记公共边的两个顶点分别为 $X,Y$, 左边的五长洞由 $X,Y,X_1,X_2,X_3$ 组成, 记作 $G_1$; 相应地, 右边的五长洞由 $X,Y,Y_1,Y_2,Y_3$ 组成, 记作 $G_2$. 因为 $\gamma(G) = \left\lceil \dfrac{\omega (G) + \Delta (G) + 1}{2}  \right\rceil \geq \left\lceil \dfrac{\omega (G_i) + \Delta (G_i) + 1}{2}  \right\rceil = \gamma(G_i) (i= 1,2) $. 那么对于一个颜色集 $S$ 满足 $|S| = \gamma(G)$, 我们先取出一些颜色 $S_1$ 将 $X,Y$ 染色, 由 定理\ref{thm41} 的证明, 我们可以在确定 $S_1$ 后使用 $S$ 分别对 $G_1,G_2$ 正常染色, 注意到去除了 $X,Y$ 的两个剩余部分之间没有连边, 于是我们给出了 $G$ 的一个正常染色, 于是定理得证. \qed
+\end{pf}
+
+\begin{figure}[h]
+\begin{center}
+\includegraphics[scale=1]{oddhole.pdf}
+\caption{奇洞}
+\label{oddhole_pic}
+\end{center}
+\end{figure}
+
+\begin{thm}\label{thm43}
+    设 $H$ 是一个长度大于 $7$ 的奇洞, 若 $G$ 是 $H$ 的一个团爆破, 那么 $\chi(G) \leq \gamma(G)$.
+\end{thm}
+\begin{pf}
+    对 $G$ 做 图\ref{oddhole_pic} 的划分, 我们将证明使用满足 $|S| = \gamma(G)$ 的颜色集 $S$可以给出一个 $G$ 上的正常染色 $\varphi$.
+
+    作为前提, 我们要求 $|X_5| \leq |X_1| $, 如若不然, 那么只需固定 $X_3$, 从近到远依次交换 $S_3$ 左右两边的图的编号, 就能得到 $|X_5| \leq |X_1| $. 
+    
+    首先对 $X,Y$ 染色, 接着我们使用 $S \setminus \varphi(Y)$ 中的颜色 对 $X_{2n+1}$ 染色, 颜色集 $S \setminus \varphi(Y)$ 的基数是大于 $X_{2n+1}$ 的顶点数的, 因为 $|S| = \gamma(G) \geq \omega(G) \geq |Y| + |X_{2n+1}|$. 类似地, 对每个 $i \geq 5$, 我们使用 $S \setminus \varphi(X_{i+1})$ 中的颜色对 $X_i$ 染色. 对于 $X_1$, 我们使用 $\varphi(X_5) \setminus \varphi(X)$ 对其染色, 由前提可知 $|\varphi(X_5) \setminus \varphi(X)| < |X_1|$, 那么从$S \setminus (\varphi(X) \cup \varphi(X_5))$ 中选出一个子集 $C_1$ 将 $X_1$ 剩余顶点染色, 于是 $|C_1| + |\varphi(X_5) \setminus \varphi(X)| = |X_1|$. 令 $C_2 = S \setminus (\varphi(X) \cup \varphi(X_1))$, 可以使用 $C_2$ 同时对 $X_2,X_4$ 染色. 那么 $G$ 中未被染色的顶点数是 $|X_2| + |X_3| + |X_4| - 2|C_2|$. 因为 $|X_2| + |X_3| + |X_4| \leq \Delta(G) + 1$ 并且 $|\varphi(X) \cup \varphi(X_1)| = |\varphi(X)| + |\varphi(X_1)| = |X| + |X_1| \leq \omega$(G), 所以有
+    \begin{align*}
+    |X_2|+|X_3|+|X_4|-2|C_2|    &\leq \Delta(G)+1-2(\gamma(G)-|X|-|X_1|)\\
+                                &\leq \Delta(G)+1-(\Delta(G)+\omega(G)+1)+2(|X|+|X_1|)\\
+                                &= 2(|X|+|X_1|)-\omega(G)
+    \end{align*}
+    
+    因为 $|S \setminus C_2| = |X| + |X_1| \geq 2(|X| + |X_1|) - \omega(G)$, 也就是 $S \setminus C_2$ 足够将未被染色顶点染完, 只要我们补充出 $X_2,X_4$ 的可行染色, 剩余颜色就自然给出了 $X_3$ 的正常染色. 可行的染色如下, 使用 $\phi(X)$ 对 $X_2$ 的剩余部分染色, 使用 $C_1 \cup (\varphi(X)\setminus \varphi(X_5))$ 对 $X_4$的剩余部分染色.如图 \ref{label} 所示, $|C_1|+|C_2|+|\varphi(X_5)\setminus\varphi(X)|+|\varphi(X)|=\gamma(G)\ge\omega(G)\ge|X_1|+|X_2|$ 并且$|C_1|+|C_2|+|\varphi(X)\setminus\varphi(X_5)|+|\varphi(X_5)|=\gamma(G)\ge\omega(G)\ge|X_4|+|X_5|$, 这说明 $X_2,X_4$ 所有顶点都能被我们选择的可行的颜色集染色, 于是我们完成了图 $G$ 的染色. \qed
+\end{pf}
+
+\begin{thm}\label{thm44}
+    若 $G$ 是一个无帽无偶洞图, 那么 $\chi(G) \leq \gamma(G)$.
+\end{thm}
+\begin{pf}
+    反设此结论不成立, 而 $G$ 是一个极小反例.
+    
+    \textbf{断言 1:} \quad $G$ 没有团割.
+
+    假设 $G$ 上存在一个团割 $K$. 记 $C_1,C_2,\cdots,C_k$ 是 $G-K$ 的连通分支, 并记 $G_i=G[G_i \cup K]$, $i = 1,2,\cdots,k$. 由 $G$ 的选择, 对每个 $i$, $\chi(G_i) \leq \gamma(G_i)$. 显然 $\gamma(G_i) \leq \gamma(G)$, 因此每个 $G_i$ 都是 $\gamma(G)-$ 可染的. 设颜色集 $S$ 满足 $|S| = \gamma(G)$. 因为 $K$ 是一个团, 在忽略具体颜色的情况下, 可以认为他的染色方式只有唯一一种, 也就是每一点分配一种颜色, 从而对于 $G_i$ 的任意染色, 都可以先确定 $K$ 的染色, 再对 $G_i$ 染色. 如果我们事前确定了 $K$ 的染色, 接着分别给出了 $G_i$ 在颜色集 $S$ 上的染色, 那么将所有 $G_i$ 合并就得到了一个 $G$ 在颜色集 $S$ 上的染色, 这说明了 $G$ 是 $\gamma(G)-$ 可染的, 矛盾. 从而 $G$ 上不存在团割.
+
+    $G$ 是无弦图, 因为弦图要么是完全图, 要么有团割, 从而 $G$ 含洞(且只能是奇洞). 由定理 \ref{cap_4hole}, $G$ 是由 $F$ 做团爆破, 再添加一个全连接团所得到的.
+
+    \textbf{断言 2:} \quad $G$ 没有全连接团.
+
+    假设 $G$ 有全连接团 $K$. 根据 $G$ 的选取, 有 $\chi(G-K) \leq \gamma(G-K)$. 设 $\varphi : G-K \rightarrow S_1$ 是 $G-K$ 的一个正常染色, 且 $|S_1| = \gamma(G-K)$. 取颜色集 $S_2$, 满足 $|S_2| = |K|$ 和 $S_1 \cap S_2 = \varnothing$, 设 $\phi : K \rightarrow S_2$ 是 $K$ 的一个正常染色.那么 $\varphi \cup \phi$ 是 $G$ 的一个正常染色. 因为 $G-K$ 的每一顶点都与 $K$ 的每一顶点相连接, 所以 $\Delta(G) \geq \Delta(G-K) + |K|$ 并且 $\omega(G) = \omega(G-K) + |K|$. 于是我们有
+
+    \begin{align*}
+        \chi(G) &\leq |S_1|+|S_2|=\gamma(G-K)+|K|\\
+                &= \lceil\frac{\Delta(G-K)+\omega(G-K)+1+2|K|}{2}\rceil\\
+                &= \lceil\frac{\Delta(G-K)+|K|+\omega(G-K)+|K|+1}{2}\rceil\\
+                &\leq \lceil\frac{\Delta(G)+\omega(G)+1}{2}\rceil\\
+                &= \gamma(G)
+    \end{align*}
+
+    根据定理 \ref{triangle_free}, $G$ 可以由一个洞通过一系列良耳朵添加得到. 设 $P$ 是最后一个耳朵. 如图 \ref{}所示, $P$ 和 $xy$ 构成了一个奇洞 $H:xx_1\cdots x_{2n+1}yx$. 设 $P_1$ 为 $x_1x_2\cdots x_{2n}$. 根据 $G$ 的选取, $G-P_1$ 是 $\gamma(G-P_1)-$可染的, 从而是 $\gamma(G)-$可染的. 如果 $n=1$, 由 定理\ref{thm41}, $G-P_1$ 上的 $\gamma(G)$ 色染色可以延展到 $G$ 上. 如果 $n \geq 2$, 由 定理\ref{thm43}, $G-P_1$ 上的 $\gamma(G)$ 色染色也可以延展到 $G$ 上, 于是证明完成. \qed
+\end{pf}
+
+
+\end{pf}
+
+\newpage
+\printbibliography[title={参考文献}]
+\end{document} 
